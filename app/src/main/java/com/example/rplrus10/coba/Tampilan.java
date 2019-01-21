@@ -86,7 +86,7 @@ public class Tampilan extends AppCompatActivity {
             Log.d("hasil json ", "onPostExecute: " + jsonObject.toString());
             try {
                 questionArrayList = new ArrayList<>();
-                Hasiljson = jsonObject.getJSONArray("hasil");
+                Hasiljson = jsonObject.getJSONArray("Result");
                 for (int i = 0; i < Hasiljson.length(); i++) {
                     question s = new question();
                     s.setId_question(Hasiljson.getJSONObject(i).getString("id_question"));
