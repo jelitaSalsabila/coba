@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -43,6 +45,7 @@ public class Tampilan extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(Tampilan.this));
         new load_data().execute();
+
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -91,7 +94,10 @@ public class Tampilan extends AppCompatActivity {
                     question s = new question();
                     s.setId_question(Hasiljson.getJSONObject(i).getString("id_question"));
                     s.setQuestion(Hasiljson.getJSONObject(i).getString("question"));
-
+                    ArrayList<String>answer = new ArrayList<String>();
+                    answer.add("Yes");
+                    answer.add("No");
+                    s.setAnswer(answer);
                     questionArrayList.add(s);
                 }
                 //slide_adapter = new slide_adapter(tampilanPertanyaan.this,questionArrayList);
