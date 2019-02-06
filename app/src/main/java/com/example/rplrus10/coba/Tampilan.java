@@ -9,9 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,26 +26,72 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Tampilan extends AppCompatActivity {
-    // menampilkan recycleview dan asnyctask
 
+    // menampilkan recycleview dan asnyctask
     ArrayList<question> questionArrayList;
     adapter_recycle_view adapter;
     RecyclerView recyclerView;
     JSONArray Hasiljson;
     question question;
-
+//    RadioButton rb_yes;
+//    RadioButton rb_no;
+    ArrayList<String>answerArraylist;
+    Button start_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tampilan);
         question = new question();
-        recyclerView = findViewById(R.id.recycler);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(Tampilan.this));
+//        rb_yes = findViewById(R.id.rb_yes);
+//        rb_no = findViewById(R.id.rb_no);
+        answerArraylist = new ArrayList<>();
+        start_btn = findViewById(R.id.start_btn);
         new load_data().execute();
 
+        questionArrayList = populateList();
+        recyclerView = findViewById(R.id.recycler);
+//        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        start_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("jawaban", "onClick: " + question.getAnswers());
+
+            }
+        });
     }
+
+    private ArrayList<question> populateList(){
+
+        ArrayList<question> list = new ArrayList<>();
+
+        for(int i = 0; i < 8; i++){
+            question quest = new question();
+            quest.setAnswers(String.valueOf(i));
+            list.add(quest);
+        }
+
+        return list;
+    }
+//
+//    public void onRadioButtonClicked(View view) {
+//        // Is the button now checked?
+//        boolean checked = ((RadioButton) view).isChecked();
+//
+//        // Check which radio button was clicked
+////        switch(view.getId()) {
+////            case R.id.rb_yes:
+////                if (checked)
+////                    //
+////                    break;
+////            case R.id.rb_no:
+////                if (checked)
+////                    // Ninjas rule
+////                    break;
+////        }
+//    }
 
     @SuppressLint("StaticFieldLeak")
     public class load_data extends AsyncTask<Void, Void, JSONObject> {
@@ -78,8 +123,10 @@ public class Tampilan extends AppCompatActivity {
                 inputStream.close();
                 String json = stringBuilder.toString();
                 jsonObject = new JSONObject(json);
+                Log.d("error try", "doInBackground: ");
             } catch (Exception e) {
                 jsonObject = null;
+                Log.d("error catch", "doInBackground: ");
             }
             return jsonObject;
         }
@@ -94,10 +141,7 @@ public class Tampilan extends AppCompatActivity {
                     question s = new question();
                     s.setId_question(Hasiljson.getJSONObject(i).getString("id_question"));
                     s.setQuestion(Hasiljson.getJSONObject(i).getString("question"));
-                    ArrayList<String>answer = new ArrayList<String>();
-                    answer.add("Yes");
-                    answer.add("No");
-                    s.setAnswer(answer);
+
                     questionArrayList.add(s);
                 }
                 //slide_adapter = new slide_adapter(tampilanPertanyaan.this,questionArrayList);

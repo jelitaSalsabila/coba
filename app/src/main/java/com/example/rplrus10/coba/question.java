@@ -6,6 +6,7 @@ public class question {
     ArrayList<String>answer = new ArrayList<String>();
     private String id_question;
     private String question;
+    private String answers;
     public String getId_question() {
         return id_question;
     }
@@ -30,4 +31,11 @@ public class question {
         this.question = question;
     }
 
+    public String getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(String answers) {
+        this.answers = answers;
+    }
 }

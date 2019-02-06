@@ -4,9 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -18,8 +23,8 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
 
     private ArrayList<question> questionArrayList;
     Context context;
-    private String[] answers;
-    private RadioGroup lastcheck = null;
+    private RadioButton lastChecked = null;
+    private String answer;
 
     public adapter_recycle_view(Context context, ArrayList<question> questionArrayList) {
         this.context = context;
@@ -35,16 +40,35 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
     }
 
     @Override
-    public void onBindViewHolder(final Holder holder, final int position) {
+    public void onBindViewHolder(final adapter_recycle_view.Holder holder, final int position) {
         final question question = questionArrayList.get(position);
         holder.tv_form_field.setText(question.getQuestion());
-        int id = (position + 1) * 100;
-        for (String answer : question.getAnswer()) {
-            RadioButton radioButton = new RadioButton(adapter_recycle_view.this.context);
-            radioButton.setId(id++);
-            radioButton.setText(answer);
-            holder.radioGroup.addView(radioButton);
-        }
+        holder.rbYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(questionArrayList.size() == 0){
+                    holder.bagian.setVisibility(View.GONE);
+                }else{
+                    holder.bagian.setVisibility(View.VISIBLE);
+                    answer = holder.bagian.getText().toString();
+                    question.setAnswers(answer);
+                }
+            }
+        });
+
+
+
+        holder.rbNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (questionArrayList.size() == 0){
+
+                }else {
+                    holder.bagian.setVisibility(View.GONE);
+                }
+            }
+        });
+
 //        holder.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 //            @Override
 //            public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -59,29 +83,52 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
 //            }
 //        });
     }
-
     @Override
     public int getItemCount() {
         return questionArrayList.size();
     }
 
+//    public  boolean isAllFieldAnswered() {
+//        for (String answer : answers) {
+//            if (answer == null) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+
     public class Holder extends RecyclerView.ViewHolder {
         public TextView tv_form_field;
-        public RadioGroup radioGroup;
+        public RadioGroup radio;
+        private RadioButton rbYes, rbNo;
+        public EditText bagian;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
             tv_form_field = (TextView)itemView.findViewById(R.id.tv_form_field);
-            radioGroup = itemView.findViewById(R.id.radioGroup);
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    if (lastcheck!= null){
-                        Toast.makeText(context,"Radio click "+radioGroup.getCheckedRadioButtonId(),Toast.LENGTH_SHORT).show();
-                    }
-                    lastcheck = group;
-                }
-            });
+            radio = itemView.findViewById(R.id.radio);
+            rbYes = itemView.findViewById(R.id.rb_yes);
+            rbNo = itemView.findViewById(R.id.rb_no);
+            bagian = itemView.findViewById(R.id.ed_bagian);
+            //bagian.setVisibility(View.GONE);
+
+
+
+//            radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                @Override
+//                public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                    RadioButton check = group.findViewById(checkedId);
+//                    Log.e("Log", "onCheckedId: " + checkedId );
+////                    if (lastChecked !=null){
+////                        lastChecked.setChecked(false);
+////                        Toast.makeText(adapter_recycle_view.this.context,
+////                                "Radio button clicked " + group.getCheckedRadioButtonId(),
+////                                Toast.LENGTH_SHORT).show();
+////                        Log.e("Log", "onCheckedChanged: " + group.getCheckedRadioButtonId() );
+////                    }
+////                    lastChecked = check;
+//                }
+//            });
         }
     }
     // tempat menaruh dan mensetting recycle view
