@@ -7,6 +7,8 @@ public class question {
     private String id_question;
     private String question;
     private String answers;
+    private boolean isSelected;
+
     public String getId_question() {
         return id_question;
     }
@@ -37,5 +39,13 @@ public class question {
 
     public void setAnswers(String answers) {
         this.answers = answers;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -25,6 +26,7 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
     Context context;
     private RadioButton lastChecked = null;
     private String answer;
+    private int lastSelectedPosition = -1;
 
     public adapter_recycle_view(Context context, ArrayList<question> questionArrayList) {
         this.context = context;
@@ -43,32 +45,42 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
     public void onBindViewHolder(final adapter_recycle_view.Holder holder, final int position) {
         final question question = questionArrayList.get(position);
         holder.tv_form_field.setText(question.getQuestion());
+        holder.radio.setTag(position);
+        holder.radio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer pos = (Integer) holder.radio.getTag();
+                Toast.makeText(context, questionArrayList.get(pos).getQuestion() + " clicked!", Toast.LENGTH_SHORT).show();
+                if (questionArrayList.get(pos).isSelected()) {
+                    questionArrayList.get(pos).setSelected(false);
+                } else {
+                    questionArrayList.get(pos).setSelected(true);
+                }
+            }
+        });
+
         holder.rbYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(questionArrayList.size() == 0){
+                if (questionArrayList.size() == 0) {
                     holder.bagian.setVisibility(View.GONE);
-                }else{
+                } else {
                     holder.bagian.setVisibility(View.VISIBLE);
                     answer = holder.bagian.getText().toString();
                     question.setAnswers(answer);
                 }
             }
         });
-
-
-
         holder.rbNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (questionArrayList.size() == 0){
+                if (questionArrayList.size() == 0) {
 
-                }else {
+                } else {
                     holder.bagian.setVisibility(View.GONE);
                 }
             }
         });
-
 //        holder.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 //            @Override
 //            public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -100,37 +112,16 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
     public class Holder extends RecyclerView.ViewHolder {
         public TextView tv_form_field;
         public RadioGroup radio;
-        private RadioButton rbYes, rbNo;
+        public RadioButton rbYes, rbNo;
         public EditText bagian;
 
-        public Holder(@NonNull View itemView) {
+        public Holder(View itemView) {
             super(itemView);
             tv_form_field = (TextView)itemView.findViewById(R.id.tv_form_field);
             radio = itemView.findViewById(R.id.radio);
             rbYes = itemView.findViewById(R.id.rb_yes);
             rbNo = itemView.findViewById(R.id.rb_no);
             bagian = itemView.findViewById(R.id.ed_bagian);
-            //bagian.setVisibility(View.GONE);
-
-
-
-//            radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                    RadioButton check = group.findViewById(checkedId);
-//                    Log.e("Log", "onCheckedId: " + checkedId );
-////                    if (lastChecked !=null){
-////                        lastChecked.setChecked(false);
-////                        Toast.makeText(adapter_recycle_view.this.context,
-////                                "Radio button clicked " + group.getCheckedRadioButtonId(),
-////                                Toast.LENGTH_SHORT).show();
-////                        Log.e("Log", "onCheckedChanged: " + group.getCheckedRadioButtonId() );
-////                    }
-////                    lastChecked = check;
-//                }
-//            });
+        }
         }
     }
-    // tempat menaruh dan mensetting recycle view
-    // layout nya namanya row_item.xml
-}

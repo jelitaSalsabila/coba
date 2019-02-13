@@ -3,6 +3,7 @@ package com.example.rplrus10.coba;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,30 +11,33 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class Finish_Adapter extends RecyclerView.Adapter<Finish_Adapter.MyHolder> {
+public class survey_Adapter extends RecyclerView.Adapter<survey_Adapter.MyHolder> {
 
     private ArrayList<question> questionArrayList;
-    private Context context;
+    Context context;
 
-    public Finish_Adapter(ArrayList<question>questionArrayList, Context context){
+    public survey_Adapter(ArrayList<question>questionArrayList, Context context){
         this.questionArrayList = questionArrayList;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public Finish_Adapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public survey_Adapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.finish_item, parent, false);
-        Finish_Adapter.MyHolder rcv = new Finish_Adapter.MyHolder(view);
+        survey_Adapter.MyHolder rcv = new survey_Adapter.MyHolder(view);
         return rcv;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Finish_Adapter.MyHolder myHolder, int i) {
-        question question = questionArrayList.get(i);
-        myHolder.updateUI(question, i + 1);
+    public void onBindViewHolder(@NonNull survey_Adapter.MyHolder myHolder, int i) {
+        final question question = questionArrayList.get(i);
+        //myHolder.updateUI(question, i + 1);
+        myHolder.tvQuestion.setText(question.getQuestion());
+        Log.d("tanya", "onBindViewHolder: " + question.getQuestion());
+        myHolder.tvNo.setText(question.getId_question());
+        Log.d("chek", "onBindViewHolder: " + question.getId_question());
     }
-
     @Override
     public int getItemCount() {
         return questionArrayList.size();
@@ -43,16 +47,14 @@ public class Finish_Adapter extends RecyclerView.Adapter<Finish_Adapter.MyHolder
 
         TextView tvQuestion;
         TextView tvAnswer;
-        TextView tvAnswer1;
+        TextView tvNo;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-
+            tvNo = itemView.findViewById(R.id.tv_no);
             tvQuestion = itemView.findViewById(R.id.tv_question);
             tvAnswer = itemView.findViewById(R.id.tv_answer);
-            tvAnswer1 = itemView.findViewById(R.id.tv_bagian);
         }
-
         void updateUI(question quest, int position) {
             tvQuestion.setText(quest.getQuestion());
             StringBuilder answers = new StringBuilder();
@@ -64,7 +66,6 @@ public class Finish_Adapter extends RecyclerView.Adapter<Finish_Adapter.MyHolder
                     answers.append(answer+ ", ");
             }
             tvAnswer.setText(answers.toString());
-            tvAnswer1.setText(answers.toString());
         }
     }
 }
