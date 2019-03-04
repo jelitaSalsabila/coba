@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class question {
     ArrayList<String>answer = new ArrayList<String>();
-    private String id_question;
+    private int id_question;
     private String question;
     private String answers;
     private boolean isSelected;
 
-    public String getId_question() {
+    public int getId_question() {
         return id_question;
     }
 
-    public void setId_question(String id_question) {
+    public void setId_question(int id_question) {
         this.id_question = id_question;
     }
 

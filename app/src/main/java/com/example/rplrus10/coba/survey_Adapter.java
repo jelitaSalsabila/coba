@@ -15,6 +15,12 @@ public class survey_Adapter extends RecyclerView.Adapter<survey_Adapter.MyHolder
 
     private ArrayList<question> questionArrayList;
     Context context;
+    private onCheckedListener listener;
+    private String answer;
+
+    public void setListener(onCheckedListener listener) {
+        this.listener = listener;
+    }
 
     public survey_Adapter(ArrayList<question>questionArrayList, Context context){
         this.questionArrayList = questionArrayList;
@@ -33,10 +39,9 @@ public class survey_Adapter extends RecyclerView.Adapter<survey_Adapter.MyHolder
     public void onBindViewHolder(@NonNull survey_Adapter.MyHolder myHolder, int i) {
         final question question = questionArrayList.get(i);
         //myHolder.updateUI(question, i + 1);
-        myHolder.tvQuestion.setText(question.getQuestion());
-        Log.d("tanya", "onBindViewHolder: " + question.getQuestion());
-        myHolder.tvNo.setText(question.getId_question());
-        Log.d("chek", "onBindViewHolder: " + question.getId_question());
+        myHolder.tvQuestion.setText(questionArrayList.get(i).getQuestion());
+        myHolder.tvNo.setText(questionArrayList.get(i).getId_question());
+        myHolder.tvAnswer.setText(questionArrayList.get(i).getAnswers());
     }
     @Override
     public int getItemCount() {
@@ -54,6 +59,13 @@ public class survey_Adapter extends RecyclerView.Adapter<survey_Adapter.MyHolder
             tvNo = itemView.findViewById(R.id.tv_no);
             tvQuestion = itemView.findViewById(R.id.tv_question);
             tvAnswer = itemView.findViewById(R.id.tv_answer);
+
+            tvAnswer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onChecked(getAdapterPosition(), answer);
+                }
+            });
         }
         void updateUI(question quest, int position) {
             tvQuestion.setText(quest.getQuestion());

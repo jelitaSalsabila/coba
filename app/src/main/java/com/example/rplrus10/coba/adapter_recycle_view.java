@@ -26,6 +26,12 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
     Context context;
     private RadioButton lastChecked = null;
     private String answer;
+    private onCheckedListener listener;
+
+    public void setListener(onCheckedListener listener) {
+        this.listener = listener;
+    }
+
     private int lastSelectedPosition = -1;
 
     public adapter_recycle_view(Context context, ArrayList<question> questionArrayList) {
@@ -33,7 +39,6 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
         this.questionArrayList = questionArrayList;
     }
 
-    @NonNull
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item, parent, false);
@@ -45,7 +50,8 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
     public void onBindViewHolder(final adapter_recycle_view.Holder holder, final int position) {
         final question question = questionArrayList.get(position);
         holder.tv_form_field.setText(question.getQuestion());
-        holder.radio.setTag(position);
+        holder.bagian.setText(questionArrayList.get(position).getAnswers());
+        holder.radio.setTag(questionArrayList.get(position).getAnswer());
         holder.radio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +77,7 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
                 }
             }
         });
+        holder.rbYes.setChecked(lastSelectedPosition == position);
         holder.rbNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +86,22 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
                 } else {
                     holder.bagian.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        holder.bagian.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                listener.onChecked(position, charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+               listener.onChecked(position, editable.toString());
             }
         });
 //        holder.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -122,6 +145,19 @@ public class adapter_recycle_view extends RecyclerView.Adapter<adapter_recycle_v
             rbYes = itemView.findViewById(R.id.rb_yes);
             rbNo = itemView.findViewById(R.id.rb_no);
             bagian = itemView.findViewById(R.id.ed_bagian);
+
+           radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+               @Override
+               public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                   if(i == R.id.rb_yes){
+                       listener.onChecked(getAdapterPosition(), "Yes");
+                   }
+
+                   if(i == R.id.rb_no) {
+                       listener.onChecked(getAdapterPosition(), "No");
+                   }
+               }
+           });
         }
         }
     }
